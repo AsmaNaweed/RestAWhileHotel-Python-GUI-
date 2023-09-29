@@ -1,0 +1,73 @@
+//Asma Naweed
+//CSE-112
+//WEEK 4 LAB
+
+
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+int main() {
+    string filename;
+    cout << "Enter the file name: ";
+    cin >> filename;
+
+    fstream fileManager;
+    fileManager.open(filename , ios::in);
+
+    if (!fileManager.is_open()) {
+        cout << "Error opening file." << endl;
+
+        return 1;
+    }
+    else {
+        cout<< "File is open"<<endl;
+    }
+
+
+    string line;
+    int lineNumber = 1;
+    int linesDisplayed = 0;
+
+    while (getline(fileManager, line)) {
+        if (linesDisplayed == 24) {
+            // Warning: Use 'break' and 'continue' with caution.
+            // They can make code difficult to understand and debug.
+
+            cout << "       Press ENTER to continue...";
+            cin.get();
+            cin.get(); // Wait for two Enter key presses to continue
+            linesDisplayed = 0;
+        }
+
+        cout << lineNumber << ":" << line << endl;
+        lineNumber++;
+        linesDisplayed++;
+    }
+
+    fileManager.close();
+
+    return 0;
+}
+
+
+
+
+
+...........................................................................................................................................................................................................................................
+
+
+
+
+
+
+
+
+
+
+
+
+
