@@ -1,10 +1,12 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 from LoginModule import LoginManager
+from CreateAccountModule import CreateAccountWindow
+
+#Main Window Display
 
 class Hotel:
-    def __init__(self):
-        print("Constructor called")
+    def __init__(self):        
         self.main_win = tk.Tk()
         self.main_win.title("Hotel Room Management")
         
@@ -20,7 +22,10 @@ class Hotel:
         self.main_win.columnconfigure(2, minsize=250)
         self.main_win.columnconfigure(3, minsize=150)
 
+    #**********************************************************************************************************************************************    
+
         #Creating Label of Main Window
+        
         self.title_label = tk.Label(text='Hotel Management System', font=("Helvetica", 15), fg="navy")
         self.title_label.grid(row=0, column=1, columnspan=3)  # Center the label in columns 1, 2, and 3
 
@@ -33,10 +38,13 @@ class Hotel:
         self.quit_button = tk.Button(text="Cancel", width=10, font=("Helvetica", 10), command=self.main_win.destroy)
         self.quit_button.grid(row=1, column=3, sticky="nsew")  # Position the "Cancel" button in column 3
 
+    #***********************************************************************************************************************************************    
 
-        # Load and display the image
-        img = Image.open("C:\\Users\\Asma\\Desktop\\Asma.gif")
-        img = img.resize(650, 250)
+
+        # Load and display the image on main window
+        
+        img = Image.open(r'C:\Users\\Asma\\Desktop\\Asma.gif')
+        img = img.resize((650, 250))
         img = ImageTk.PhotoImage(img)
         self.labelGIF = tk.Label(image=img)
         self.labelGIF.image = img
@@ -44,20 +52,46 @@ class Hotel:
 
         tk.mainloop()
 
+    #****************************************************************************************************************************************************
+        
+    #Create Account Button Module
+        
     def create_account(self):
         # Replace this with the code to handle the "Create Account" button click
         print("Create Account button clicked")
 
-    def login(self):
+        # Disable the "Create Account" button once clicked
+        self.create_account_button.configure(state="disabled")
+
+        self.create_account_window = CreateAccountWindow()
+        self.create_account_window.run()
         
+              
+
+
+
+
+    #****************************************************************************************************************************************************
+        
+    #Login Button functionality
+        
+    def login(self):        
         # Create an instance of the LoginManager class
         login_manager_instance = LoginManager()
+
+
+        self.clogin_manager_instance.configure(state="disabled")
 
         # Set initial username and password (you can change these)
         login_manager_instance.AddLogin("admin", "password")
 
+        
+
         # Run the login manager and display the login 
         print("calling run")
-        #login_manager_instance.run()
+        login_manager_instance.run()
+
+  #********************************************************************************************************************************************************
 
 Hotel_Mnagement_System = Hotel()
+tk.mainloop()
