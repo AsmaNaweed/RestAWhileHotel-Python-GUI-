@@ -3,7 +3,8 @@ import csv
 from tkinter import messagebox
 
 class LoginManager:
-    def __init__(self):       
+    def __init__(self):     
+        print("Login Manager Constructor");  
         self.usernameStored = ""
         self.passwordStored = ""
         self.AccountLogin = tk.Tk()  # Create a Tkinter AccountLogin window
@@ -32,9 +33,9 @@ class LoginManager:
         
         # Check if the entered credentials are valid
         if self.VerifyLogin(username, password):
-            messagebox.showinfo("Login Successful")
+            messagebox.showinfo("Login Successful", "Login was successfull")
         else:
-             messagebox.showinfo("Login Filed")
+             messagebox.showinfo("Login Failed", "Invalid Credentials")
         
     def VerifyLogin(self, username, password):
         with open('usernames.txt', mode='r') as file:
@@ -62,6 +63,7 @@ class LoginManager:
 
 class PasswordValidator:
     def __init__(self):
+        print("Password validator constructor");
         self.has_length = True
         self.has_uppercase = False
         self.has_lowercase = False
@@ -108,7 +110,7 @@ def getting_input():
         else:
             print("Not a valid password.")
 
-getting_input()
+
 
     
 

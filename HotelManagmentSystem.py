@@ -78,19 +78,19 @@ class Hotel:
         
     def login(self):        
         # Create an instance of the LoginManager class
-        login_manager_instance = LoginManager()
+        self.login_manager_instance = LoginManager()
 
 
-        self.clogin_manager_instance.configure(state="disabled")
+        self.login_manager_instance.configure(state="disabled")
 
         # Set initial username and password (you can change these)
-        login_manager_instance.AddLogin("admin", "password")
+        self.login_manager_instance.AddLogin("admin", "password")
 
         
 
         # Run the login manager and display the login 
         print("calling run")
-        login_manager_instance.run()
+        self.login_manager_instance.run()
 
   #***************************************************************************************
 
@@ -113,6 +113,6 @@ class Hotel:
         print("Invalid username or password")
         return False
 
-
+print("About to create hotel object");
 Hotel_Mnagement_System = Hotel()
 tk.mainloop()
