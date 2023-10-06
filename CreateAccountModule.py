@@ -17,30 +17,12 @@ class CreateAccountWindow:
         self.password_entry.pack()
 
         # Button to create the account
-        tk.Button(self.create_account_window, text="Create Account", command=self.CreateAccount).pack()        
+        tk.Button(self.create_account_window, text="Create Username", command=self.create_username).pack()
+        tk.Button(self.create_account_window, text="Create Password", command=self.create_password).pack()
+
+        
 
 #***************************************************************File for Username and Password ***********************************************
-
-    def CreateAccount(self):
-        # Get the username entered by the user
-        username = self.username_entry.get()
-        # Get the password entered by the user
-        password = self.password_entry.get()
-        print(username+ " " + password)
-        self.AddLogin(username, password)
-
-        
-        
-
-    
-    def AddLogin(self, username, password):
-        try:
-        # Save the username to the usernames.txt file
-            with open("usernames.txt", "a") as file:
-                file.write(username + "," + password + "\n")                 #Asma,12345(pattern of the file)               
-                messagebox.showinfo("Success", "Account created successfully")
-        except Exception as e:
-                messagebox.showerror("Error", "Failed to create account: " + str(e))
 
         
         
@@ -48,10 +30,18 @@ class CreateAccountWindow:
     # Get the username entered by the user
         username = self.username_entry.get()
 
-    
-def create_password(self):
+    try:
+        # Save the username to the usernames.txt file
+        with open("usernames.txt", "a") as file:
+            file.write(username + "\n")
+
+        messagebox.showinfo("Success", "Username created successfully!")
+    except Exception as e:
+        messagebox.showerror("Error", "Failed to save username: " + str(e))
+
+    def create_password(self):
     # Get the password entered by the user
-    password = self.password_entry.get()
+        password = self.password_entry.get()
 
     # Validate the password
     if not re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{9,}$', password):

@@ -1,6 +1,6 @@
 import tkinter as tk
-
-
+import csv
+from tkinter import messagebox
 
 class LoginManager:
     def __init__(self):       
@@ -32,16 +32,22 @@ class LoginManager:
         
         # Check if the entered credentials are valid
         if self.VerifyLogin(username, password):
-            print("Login successful")
+            messagebox.showinfo("Login Successful")
         else:
-            print("Login failed")
+             messagebox.showinfo("Login Filed")
         
     def VerifyLogin(self, username, password):
-        if username == self.usernameStored and password == self.passwordStored:
-            return True
-        else:
-            return False
+        with open('usernames.txt', mode='r') as file:
+            csv_reader = csv.reader(file)
+            for row in csv_reader:
+                saved_username, saved_password = row
+                print(saved_username + "," + saved_password)
+                if username == saved_username and password == saved_password:                  
+                    print("Login successful")
+                    return True
 
+        print("Invalid username or password")
+        return False
     def AddLogin(self, username, password):
         self.usernameStored = username
         self.passwordStored = password
@@ -54,10 +60,8 @@ class LoginManager:
 #****************************************************************************************************************************************
 #*******************************************   Password Validation  *********************************************************************
 
-
 class PasswordValidator:
-    def __init__(self):                     #Construtor of this class
-        print ("Password validator constructor called")
+    def __init__(self):
         self.has_length = True
         self.has_uppercase = False
         self.has_lowercase = False
@@ -91,6 +95,20 @@ class PasswordValidator:
             and self.has_digit
         )
 
+def getting_input():
+    validator = PasswordValidator()
+
+    while True:
+        
+        password = input()
+       
+        if validator.is_valid(password):
+            print("Password has been approved.")
+            break
+        else:
+            print("Not a valid password.")
+
+getting_input()
 
     
 

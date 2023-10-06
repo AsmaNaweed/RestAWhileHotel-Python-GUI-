@@ -2,6 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 from LoginModule import LoginManager
 from CreateAccountModule import CreateAccountWindow
+import csv
 
 #Main Window Display
 
@@ -91,7 +92,27 @@ class Hotel:
         print("calling run")
         login_manager_instance.run()
 
-  #********************************************************************************************************************************************************
+  #***************************************************************************************
+
+  #******************************* Validate Login Information ****************************
+
+    def validate_login(self):
+        # Get the entered username and password
+        username = self.username_entry.get()
+        password = self.password_entry.get()  
+        # Load user data from the txt file
+        with open('usernames.txt', mode='r') as file:
+            csv_reader = csv.reader(file)
+            for row in csv_reader:
+                saved_username, saved_password = row
+                if username == saved_username and password == saved_password:
+                    print(saved_username + "," + saved_password)
+                    print("Login successful")
+                    return True
+
+        print("Invalid username or password")
+        return False
+
 
 Hotel_Mnagement_System = Hotel()
 tk.mainloop()
