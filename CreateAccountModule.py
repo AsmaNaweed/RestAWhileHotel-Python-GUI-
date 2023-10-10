@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+import re  # Import the 're' module for regular expressions
 
 
 class CreateAccountWindow:
@@ -18,8 +19,7 @@ class CreateAccountWindow:
         self.password_entry.pack()
 
         # Button to create the account
-        tk.Button(self.create_account_window, text="Create Username", command=self.create_username).pack()
-        tk.Button(self.create_account_window, text="Create Password", command=self.create_password).pack()
+        tk.Button(self.create_account_window, text="Create Account", command=self.create_account).pack()
 
         
 
@@ -27,35 +27,44 @@ class CreateAccountWindow:
 
         
         
-    def create_username(self):
-    # Get the username entered by the user
+    def is_valid_password(self, password):
+        return re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{9,}$', password)
+
+    def is_username_unique(self, username):
+        with open("usernames.txt", "r") as file:
+            lines = file.readlines()
+            for line in lines:
+                print(" line read from the file is: " + line)
+                if len(line) >0:
+                    print("Length of the line is " + str(len(line)))
+                    existing_username, _ = line.strip().split(',')
+                    if existing_username == username:
+                        return False
+        return True
+
+    def create_account(self):
         username = self.username_entry.get()
-
-        try:
-            # Save the username to the usernames.txt file
-            with open("usernames.txt", "a") as file:
-                file.write(username + "\n")
-
-                messagebox.showinfo("Success", "Username created successfully!")
-        except Exception as e:
-                messagebox.showerror("Error", "Failed to save username: " + str(e))
-
-    def create_password(self):
-    # Get the password entered by the user
         password = self.password_entry.get()
-        
-     
-        if not re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{9,}$', password):
+
+        if not self.is_valid_password(password):
             messagebox.showerror("Error", "Password must be 9 characters long and contain at least 1 digit, 1 uppercase, and 1 lowercase letter.")
+        elif not self.is_username_unique(username):
+            messagebox.showerror("Error", "Username already exists. Please choose a different username.")
         else:
             try:
-            # Save the password to the passwords.txt file
-                 with open("passwords.txt", "a") as file:
-                    file.write(password + "\n")
+                # Save the username and password as a pair to the accounts.txt file
+                with open("usernames.txt", "a") as file:
+                    file.write(f"{username},{password}\n")
 
-                    messagebox.showinfo("Success", "Password created successfully!")
+                messagebox.showinfo("Success", "Account created successfully!")
+                self.create_account_window.destroy()
             except Exception as e:
-                messagebox.showerror("Error", "Failed to save password: " + str(e))
+                messagebox.showerror("Error", "Failed to save account: " + str(e))
+
+    
+        
+     
+        
 
     def run(self):
        # Start the Tkinter main loop

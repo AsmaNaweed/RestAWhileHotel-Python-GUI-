@@ -4,6 +4,7 @@ from LoginModule import LoginManager
 from CreateAccountModule import CreateAccountWindow
 import csv
 
+
 #Main Window Display
 
 class Hotel:
@@ -81,7 +82,7 @@ class Hotel:
         self.login_manager_instance = LoginManager()
 
 
-        self.login_manager_instance.configure(state="disabled")
+        #self.login_manager_instance.configure(state="disabled")
 
         # Set initial username and password (you can change these)
         self.login_manager_instance.AddLogin("admin", "password")
@@ -115,4 +116,3 @@ class Hotel:
 
 print("About to create hotel object");
 Hotel_Mnagement_System = Hotel()
-tk.mainloop()
