@@ -58,10 +58,7 @@ class LoginManager:
 
     def Display_Reserve_Room_Window(self):
           self.ReservationWindow=ReserveRoomWindow()
-          self.ReservationWindow.run()
-         
-            
-
+                       
     def run(self):
         # Start the Tkinter main loop
         self.AccountLogin.mainloop()

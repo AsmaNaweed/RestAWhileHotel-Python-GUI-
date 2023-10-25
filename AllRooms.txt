@@ -1,0 +1,7 @@
+RoomNumber,FloorNumber,RoomName,Price
+1,1,Floor 1 King Room,433.00
+2,1,Floor 2 Queen Room,300
+3,2,Floor 2 Queen Room,433.00
+4,2,Floor 2  King Room,500.00
+5,3,Floor 3 King Room,600
+6,3,Floor 1 King Room,600

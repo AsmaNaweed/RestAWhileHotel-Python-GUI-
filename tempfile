@@ -1,26 +1,4 @@
-import tkinter as tk
-from PIL import Image, ImageTk
-
-class ReserveRoomWindow:
-    def __init__(self):
-        print("ReserveRoomWindow Constructor Called.");
-        self.ReservationWindow = tk.Tk();
-        self.ReservationWindow.title("Room Reservation")
-        self.ReservationWindow.geometry("900x600")
-        self.ReservationWindow.resizable(False, False)
-
-        # Load the image (your code)
-        try:
-            img = Image.open(r'C:\Users\Asma\Desktop\Hotel.jpg')
-            img = img.resize((600, 400))
-            img = ImageTk.PhotoImage(img)
-            self.labelGIF = tk.Label(self.ReservationWindow, image=img)
-            self.labelGIF.image = img
-            self.labelGIF.place(x=100, y=100)
-        except Exception as e:
-            print("Error loading image:", str(e))
-
-        # Floor selection (your code)
+# Floor selection (your code)
         floorOptionList = ['Ground Floor', 'Second Floor', 'Third Floor']
         self.floorOption_var = tk.StringVar()
         self.floorOption_var.set('Select Floor')
@@ -47,7 +25,6 @@ class ReserveRoomWindow:
         # Create a reserve button (your code)
         self.reserve_button = tk.Button(self.ReservationWindow, text="Reserve Room", command=self.reserve_room)
         self.reserve_button.place(x=20, y=80)
-        
 
     def room_selection(self, selected_room_type):
         print("Selected Room Type:", selected_room_type)
@@ -71,4 +48,3 @@ class ReserveRoomWindow:
             print("Selected Floor:", selected_floor)
 
 rw = ReserveRoomWindow()
-tk.mainloop();

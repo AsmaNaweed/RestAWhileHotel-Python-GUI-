@@ -1,0 +1,2 @@
+Room Type: DR, Price: Deluxe King Room 4 per floor
+Room Type: TR, Price: Twin Room 2 per floor
