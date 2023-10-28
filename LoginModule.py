@@ -43,7 +43,7 @@ class LoginManager:
                         print("About to destroy the login window")
                         self.AccountLogin.destroy()
                          # Open a new window upon successful login
-                        self.Display_Reserve_Room_Window()
+                        self.Display_Reserve_Room_Window(username)
                        
                         
                         return
@@ -56,8 +56,8 @@ class LoginManager:
         self.usernameStored = username
         self.passwordStored = password
 
-    def Display_Reserve_Room_Window(self):
-          self.ReservationWindow=ReserveRoomWindow()
+    def Display_Reserve_Room_Window(self, username):
+          self.ReservationWindow=ReserveRoomWindow(username)
                        
     def run(self):
         # Start the Tkinter main loop

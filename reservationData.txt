@@ -1,2 +1,2 @@
-Room Type: DR, Price: Deluxe King Room 4 per floor
-Room Type: TR, Price: Twin Room 2 per floor
+userName,FloorNumber,RoonNumber,Cost,StartDate,EndDate
+Python2023,Ground Floor,KR,100,1-1-2023,2-2-2023
