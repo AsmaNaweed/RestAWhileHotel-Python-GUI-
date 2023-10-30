@@ -3,6 +3,7 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import csv
 from datetime import datetime
+from tkcalendar import DateEntry
 
 
 class ReserveRoomWindow:
@@ -31,15 +32,48 @@ class ReserveRoomWindow:
         self.floorOption_menu = tk.OptionMenu(self.ReservationWindow, self.floorOption_var, *floorOptionList)
         self.floorOption_menu.grid(row=1, column=1)
         self.floorOption_var.trace('w', self.handle_floor_selection)
+        
+
+        #Calendar
+
+        #Start-Date Label
+        startDateLabel = tk.Label(self.ReservationWindow, text='Choose Start date');
+        startDateLabel.place(x=350,y=20)
+
+        self.StartDateControl = DateEntry(self.ReservationWindow, width=12, background='darkblue',
+                    foreground='white', borderwidth=2)
+        self.StartDateControl.place(x=450,y=20);
+
+        #End_Date Label
+        EndDateLabel = tk.Label(self.ReservationWindow, text='Choose End date');
+        EndDateLabel.place(x=350,y=80)
+
+        self.EndDateControl = DateEntry(self.ReservationWindow, width=12, background='darkblue',
+                    foreground='white', borderwidth=2)
+        self.EndDateControl.place(x=450,y=80);
+ 
 
         # Create a drop-down menu for room type selection
         room_types = [
-            "KR – King Room 4 per floor $59.00",
-            "TR – Twin Room 2 per floor $69.00",
-            "DR – Deluxe King Room 4 per floor $75.00",
-            "CR – Corner King Room 4 per floor $90.00",
-            "CS – Corner Suite 2 per floor $110.00"
-        ]
+            "KR1 - King Room - $59.00",
+            "KR2 - King Room - $59.00",
+            "KR3 - King Room - $59.00",
+            "KR4 - King Room - $59.00",
+            "TR1 - Twin Room - $69.00",
+            "TR2 - Twin Room - $69.00",
+            "DR1 - Deluxe King - $75.00",
+            "DR2 - Deluxe King - $75.00",
+            "DR3 - Deluxe King - $75.00",
+            "DR4 - Deluxe King - $75.00",
+            "CR1 - Corner King - $90.00",
+            "CR2 - Corner King - $90.00",
+            "CR2 - Corner King - $90.00",
+            "CR3 - Corner King Room - $90.00",
+            "CR4 - Corner King Room - $90.00",
+            "CS1 - Corner Suite - $110.00",
+            "CS2 - Corner Suite - $110.00"
+            
+          ]
 
         self.selected_room_type = tk.StringVar()
         self.selected_room_type.set("Select Room")
@@ -58,22 +92,34 @@ class ReserveRoomWindow:
 
     def room_selection(self, selected_room_type):
         print("Selected Room Type:", selected_room_type)
+        print("called")
+
+    def ValidateReservation(self, userName, selectedFloor, roomNumber, startDate, endDate):
+  
+        messagebox.showerror("Invalid Reservation", "The reservation is not valid.")
+        return False
 
     def reserve_room(self):
         selected_floor = self.floorOption_var.get()
         selected_room_info = self.selected_room_type.get()
+        print(selected_room_info)       
 
         if selected_floor != 'Select Floor' and selected_room_info != 'Select Room':
-            room_type, price_info = selected_room_info.split(" – ")
-            price, _ = price_info.split(" $")
-            print("Selected Room Type:", room_type)
-            print("Price:", price)
-            ReservationCost="100"
-            ReservationStartDate="1-1-2023"
-            ReservationEndDate="2-2-2023"
+            room_number, room_description,reservation_cost = selected_room_info.split("-")
+                  
+            reservation_start_date=self.StartDateControl.get_date()
+
+            reservation_end_date=self.EndDateControl.get_date()
+
+
+            isReservationValid= self.ValidateReservation(self.username,selected_floor,room_number,reservation_start_date,reservation_end_date)
+            if isReservationValid == False:
+                return
+           
+            
 
             # Save the reservation details to a file (user-specific)
-            reservation_data = f"{self.username},{selected_floor},{room_type},{ReservationCost},{ReservationStartDate},{ReservationEndDate}\n"
+            reservation_data = f"{self.username},{selected_floor},{room_number},{reservation_cost},{reservation_start_date},{reservation_end_date}\n"
             #python2023,First Floor,123,King KR,2023-10-11,2034-10-20
             with open('reservationData.txt', mode='a') as file:
                 file.write(reservation_data)
@@ -120,5 +166,3 @@ if __name__ == "__main__":
 
 
 
-
-   
