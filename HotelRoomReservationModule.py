@@ -14,6 +14,7 @@ class ReserveRoomWindow:
         self.ReservationWindow.geometry("900x600")
         self.ReservationWindow.resizable(False, False)
 
+
         # Load the image (your code)
         try:
             img = Image.open(r'C:\Users\Asma\Desktop\Hotel.jpg')
@@ -94,10 +95,30 @@ class ReserveRoomWindow:
         print("Selected Room Type:", selected_room_type)
         print("called")
 
-    def ValidateReservation(self, userName, selectedFloor, roomNumber, startDate, endDate):
-  
-        messagebox.showerror("Invalid Reservation", "The reservation is not valid.")
+    def ReadAllReservations(self,fileNameToRead:str):
+        with open(fileNameToRead, "r") as f:
+            lines = f.readlines()
+            return lines;
+        
+    def DoesReservationExists(self,usernameToSearch,selected_floor,room_number,AllLinesData):
+        for line in AllLinesData:
+            #userName,FloorNumber,RoonNumber,Cost,StartDate,EndDate
+             userName,floorNumber,roomNumber,_,_,_ = line.split(",")
+             if (userName == usernameToSearch and floorNumber == selected_floor and roomNumber == room_number):
+                 return True
         return False
+        
+
+    def ValidateReservation(self, userName, selectedFloor, roomNumber, startDate, endDate):        
+         
+         reservationExist=self.DoesReservationExists(userName,selectedFloor,roomNumber,self.ReadAllReservations("reservationData.txt"))
+
+         if(reservationExist==True):
+            messagebox.showerror("Invalid Reservation", "The reservation is duplicate.")
+            return False
+         else:
+            return True
+    
 
     def reserve_room(self):
         selected_floor = self.floorOption_var.get()
@@ -144,18 +165,13 @@ class ReserveRoomWindow:
             self.room_menu.config(state="normal")  # Enable room selection
 
             
-    def ReadAllReservation (self,fileNameToRead:str):
-        with open(fileNameToRead, "r") as f:
-            lines = f.readlines()
-            return lines;
-    def FindRservationRecord(self,usernameToSearch,room_number,AllLinesData):
-        for line in AllLinesData:
-            print(line)
+    
+             
 def main():
     username =  "Asma" # Replace with the actual username after login
     ReserveWindow=ReserveRoomWindow(username)
-    StoreLines=ReserveWindow.ReadAllReservation(r"C:\Development\Python\RestAWhileHotel\reservationData.txt")
-    ReserveWindow.FindRservationRecord("Python2023",15,StoreLines)
+    #StoreLines=ReserveWindow.ReadAllReservations(r"C:\Development\Python\RestAWhileHotel\reservationData.txt")
+    #ReserveWindow.FindRservationRecord("Python2023",15,StoreLines)
 
    
     
