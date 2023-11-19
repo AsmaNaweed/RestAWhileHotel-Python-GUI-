@@ -4,7 +4,8 @@ import re  # Import the 're' module for regular expressions
 
 
 class CreateAccountWindow:
-    def __init__(self):
+    def __init__(self, main_win):
+        self.main_win=main_win
         print("CreateAccountWindow Constructor called.")
         self.create_account_window = tk.Toplevel()
         self.create_account_window.title("Create Account")

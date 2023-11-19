@@ -4,9 +4,12 @@ from PIL import Image, ImageTk
 import csv
 from datetime import datetime
 from tkcalendar import DateEntry
+from tkinter import simpledialog
 
 
-class ReserveRoomWindow:
+class ReserveRoomWindow:  
+ 
+            
     def __init__(self, username):
         self.username = username
         self.ReservationWindow = tk.Toplevel()
@@ -33,7 +36,21 @@ class ReserveRoomWindow:
         self.floorOption_menu = tk.OptionMenu(self.ReservationWindow, self.floorOption_var, *floorOptionList)
         self.floorOption_menu.grid(row=1, column=1)
         self.floorOption_var.trace('w', self.handle_floor_selection)
-        
+
+
+        # Creating Manager Button
+        self.Manager_button = tk.Button(self.ReservationWindow, text="Manager", width=15, font=("Helvetica", 10))
+        self.Manager_button.place(x=650, y=40)  # Position the "Manager" button in column 10
+
+
+     def open_manager_window(self)
+          manager_window = ManagerWindow(self.ReservationWindow)
+          
+ class ManagerWindow:
+     def __init__(self,parent):
+         self.manager_window = tk.Toplevel(parent)
+         self.manager_window.title("Manager Window")
+         self.manager_window.geometry("400x300")
 
         #Calendar
 
@@ -75,9 +92,10 @@ class ReserveRoomWindow:
             "CS2 - Corner Suite - $110.00"
             
           ]
-
+        self.user_reservations = self.GetReservationsByUser(self.username)
         self.selected_room_type = tk.StringVar()
         self.selected_room_type.set("Select Room")
+        self.selected_reservation_for_cancellation=tk.StringVar()
 
         self.room_menu = tk.OptionMenu(self.ReservationWindow, self.selected_room_type, *room_types,
                                        command=self.room_selection)
@@ -88,12 +106,41 @@ class ReserveRoomWindow:
         self.reserve_button = tk.Button(self.ReservationWindow, text="Reserve Room", command=self.reserve_room)
         self.reserve_button.place(x=20, y=80)
 
-        self.cancel_button = tk.Button(self.ReservationWindow, text="Cancel Reservation", command=self.cancel_reservation)
-        self.cancel_button.place(x=150, y=80)
+               
+          # Create a label for the cancellation menu
+        cancel_label = tk.Label(self.ReservationWindow, text="Cancel Reservation:")
+        cancel_label.place(x=200, y=50)
+       
+        self.cancel_reservation_menu = tk.OptionMenu(self.ReservationWindow, self.selected_reservation_for_cancellation, *self.user_reservations,
+                                       command=self.cancel_reservation)
+        self.cancel_reservation_menu.place(x=150, y=80)
+        self.cancel_reservation_menu.config(width=25)
 
     def room_selection(self, selected_room_type):
-        print("Selected Room Type:", selected_room_type)
-        print("called")
+        room_info = selected_room_type.split("-")
+        room_number = room_info[0].strip()
+
+        # Check room availability
+        if self.is_room_available(self.floorOption_var.get(), room_number):
+
+            print ("Selected Room Type: " , selected_room_type)
+        else:
+            messagebox.showerror("Room Unavailable" , " This room is already reserved. Please select another room.")
+
+
+
+    def is_room_available(self, selected_floor, room_number):
+       # cleaned_room_number =  room_number.replace(" ", "").upper()  # Remove spaces and convert to uppercase
+
+        # Implement logic to check if the room is available based on its status
+        #return self.room_types_data[cleaned_room_number]["status"] == "available"
+        #print("Selected Room Type:", selected_room_type)
+        allReservations=self.ReadAllReservations("reservationData.txt")
+        if self.DoesReservationExists(selected_floor,room_number,allReservations):
+            return False
+        else:
+            return True
+        
 
     def ReadAllReservations(self,fileNameToRead:str):
         with open(fileNameToRead, "r") as f:
@@ -107,17 +154,23 @@ class ReserveRoomWindow:
              if (userName == usernameToSearch and floorNumber == selected_floor and roomNumber == room_number):
                  return True
         return False
+
+    def DoesReservationExists(self,selected_floor,room_number,AllLinesData):
+        for line in AllLinesData:
+            #userName,FloorNumber,RoonNumber,Cost,StartDate,EndDate
+            _,floorNumber,roomNumber,_,_,_ = line.split(",")
+            if ( floorNumber == selected_floor and roomNumber == room_number):
+                 return True
+        return False
+
+    def ValidateReservation(self, userName, selectedFloor, roomNumber, startDate, endDate):
+        # Check room availability before reserving the room
+            if not self.is_room_available(selectedFloor,roomNumber):
+                messagebox.showerror("Room Uavailable" , " This room is already reserved. Please select another room.")
+                return False
+            else:
+                return True
         
-
-    def ValidateReservation(self, userName, selectedFloor, roomNumber, startDate, endDate):        
-         
-         reservationExist=self.DoesReservationExists(userName,selectedFloor,roomNumber,self.ReadAllReservations("reservationData.txt"))
-
-         if(reservationExist==True):
-            messagebox.showerror("Invalid Reservation", "The reservation is duplicate.")
-            return False
-         else:
-            return True
     
 
     def reserve_room(self):
@@ -126,7 +179,9 @@ class ReserveRoomWindow:
         print(selected_room_info)       
 
         if selected_floor != 'Select Floor' and selected_room_info != 'Select Room':
-            room_number, room_description,reservation_cost = selected_room_info.split("-")
+            room_number,_,reservation_cost = selected_room_info.split("-")
+            room_number = room_number.strip()  # Strip whitespace from room_number          
+        
                   
             reservation_start_date=self.StartDateControl.get_date()
 
@@ -135,7 +190,7 @@ class ReserveRoomWindow:
 
             isReservationValid= self.ValidateReservation(self.username,selected_floor,room_number,reservation_start_date,reservation_end_date)
             if isReservationValid == False:
-                return
+                return     
            
             
 
@@ -154,9 +209,46 @@ class ReserveRoomWindow:
         else:
             messagebox.showerror("Error", "Please select both floor and room type.")
 
-    def cancel_reservation(self):
-        # You can implement the cancellation logic here
-        pass
+    def cancel_reservation(self, selected_reservation):
+        print (selected_reservation)
+        userReservations=self.GetReservationsByUser(self.username)
+        if len(userReservations)==0:
+            messagebox.showerror("ERROR","No Reservations found")
+            return
+        
+              
+            # Extract details
+        userNameToDelete, floorNumberToDelete, roomNumberToDelete, cost, startDateToDelete = selected_reservation
+            #Call the DeleteReservation function to cancel the reservation
+        self.DeleteReservation(userNameToDelete, floorNumberToDelete, roomNumberToDelete, cost, startDateToDelete)
+
+            # Show a success message
+        messagebox.showinfo ("Successful", "Reservation Deleted.")
+ 
+       
+    def DeleteReservation(self,userNameToDelete,floorNumberToDelete,roomNumberToDelete,cost,startDateToDelete):
+        #print(f"I will delete {userName},{floorNumber},{roomNumber},{cost},{startDate}")
+        allLines=self.ReadAllReservations("reservationData.txt")
+        with open('reservationData.txt', mode='w') as file:
+             for line in allLines:
+                 userName,floorNumber,roomNumber,_,startDate,_ = line.split(",")
+                 if not(userName == userNameToDelete and floorNumberToDelete == floorNumber and roomNumberToDelete == roomNumber and startDateToDelete.strip() == startDate.strip()):
+                    file.write(line)
+        
+        
+
+        
+    def GetReservationsByUser(self,searchUserName):
+        reservationList = []
+        allLines=self.ReadAllReservations("reservationData.txt")
+        for line in allLines:
+          userName,floorNumber,roomNumber,cost,startDate,_ = line.split(",")
+          if (searchUserName==userName):
+              reservationList.append((userName,floorNumber,roomNumber,cost,startDate))
+        return reservationList;
+              
+          
+            
 
     def handle_floor_selection(self, *args):
         selected_floor = self.floorOption_var.get()
@@ -164,21 +256,27 @@ class ReserveRoomWindow:
             print("Selected Floor:", selected_floor)
             self.room_menu.config(state="normal")  # Enable room selection
 
-            
+
+
+                
     
              
 def main():
     username =  "Asma" # Replace with the actual username after login
     ReserveWindow=ReserveRoomWindow(username)
-    #StoreLines=ReserveWindow.ReadAllReservations(r"C:\Development\Python\RestAWhileHotel\reservationData.txt")
-    #ReserveWindow.FindRservationRecord("Python2023",15,StoreLines)
-
+    myReservations=ReserveWindow.GetReservationsByUser("Asma")
+    print (len(myReservations))
+    for reservation in myReservations:
+        userName,floorNumber,roomNumber,cost,startDate=reservation
+        
+        print(userName)
    
-    
+        
     
 
-if __name__ == "__main__":
-    main()
+main()
+    
+    
 
 
 

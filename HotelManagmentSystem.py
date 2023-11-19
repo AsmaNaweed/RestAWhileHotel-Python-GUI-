@@ -59,13 +59,16 @@ class Hotel:
     #Create Account Button Module
         
     def create_account(self):
+
+         # Disable the main window
+        self.main_win.withdraw()
         # Replace this with the code to handle the "Create Account" button click
         print("Create Account button clicked")
 
         # Disable the "Create Account" button once clicked
         self.create_account_button.configure(state="disabled")
 
-        self.create_account_window = CreateAccountWindow()
+        self.create_account_window = CreateAccountWindow(self.main_win)
         self.create_account_window.run()
         
               
@@ -77,9 +80,12 @@ class Hotel:
         
     #Login Button functionality
         
-    def login(self):        
+    def login(self):
+        # Disable the main window
+        self.main_win.withdraw()
+        
         # Create an instance of the LoginManager class
-        self.login_manager_instance = LoginManager()
+        self.login_manager_instance = LoginManager(self.main_win)
 
 
         #self.login_manager_instance.configure(state="disabled")

@@ -4,11 +4,14 @@ from tkinter import messagebox
 from HotelRoomReservationModule import ReserveRoomWindow
 
 class LoginManager:
-    def __init__(self):     
+    def __init__(self, main_win):
+        self.main_win=main_win
+        self.create_account_window=tk.Toplevel()
+        self.create_account_window.title("Create Account")
         print("Login Manager Constructor");  
         self.usernameStored = ""
         self.passwordStored = ""
-        self.AccountLogin = tk.Tk()  # Create a Tkinter AccountLogin window
+        self.AccountLogin = tk.Toplevel()  # Create a Tkinter AccountLogin window
         self.AccountLogin.title("Account Login")
         
         # Set window size
