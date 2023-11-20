@@ -5,13 +5,15 @@ import csv
 from datetime import datetime
 from tkcalendar import DateEntry
 from tkinter import simpledialog
+from ManagerDataModule import Manager_Window
 
 
 class ReserveRoomWindow:  
  
             
-    def __init__(self, username):
+    def __init__(self, main_window, username):
         self.username = username
+        self.main_window = main_window
         self.ReservationWindow = tk.Toplevel()
         self.ReservationWindow.title("Room Reservation")
         self.ReservationWindow.geometry("900x600")
@@ -38,19 +40,6 @@ class ReserveRoomWindow:
         self.floorOption_var.trace('w', self.handle_floor_selection)
 
 
-        # Creating Manager Button
-        self.Manager_button = tk.Button(self.ReservationWindow, text="Manager", width=15, font=("Helvetica", 10))
-        self.Manager_button.place(x=650, y=40)  # Position the "Manager" button in column 10
-
-
-     def open_manager_window(self)
-          manager_window = ManagerWindow(self.ReservationWindow)
-          
- class ManagerWindow:
-     def __init__(self,parent):
-         self.manager_window = tk.Toplevel(parent)
-         self.manager_window.title("Manager Window")
-         self.manager_window.geometry("400x300")
 
         #Calendar
 
@@ -106,6 +95,10 @@ class ReserveRoomWindow:
         self.reserve_button = tk.Button(self.ReservationWindow, text="Reserve Room", command=self.reserve_room)
         self.reserve_button.place(x=20, y=80)
 
+         # Creating Manager Button
+        self.Manager_button = tk.Button(self.ReservationWindow, text="Manager", command=self.ManagerButtonClicked)
+        self.Manager_button.place(x=650, y=40)  # Position the "Manager" button in column 10
+
                
           # Create a label for the cancellation menu
         cancel_label = tk.Label(self.ReservationWindow, text="Cancel Reservation:")
@@ -115,6 +108,24 @@ class ReserveRoomWindow:
                                        command=self.cancel_reservation)
         self.cancel_reservation_menu.place(x=150, y=80)
         self.cancel_reservation_menu.config(width=25)
+        
+    def ManagerButtonClicked(self):
+      print("Manager button clicked")
+         # Disable the Reservation window
+      self.ReservationWindow.withdraw()
+
+      print("Manager button clicked")
+        
+        
+    # Create an instance of the Manager_Window class
+      self.manager_window_instance = Manager_Window(self.main_window)
+
+        
+        # Run the login manager and display the login 
+      print("calling run")
+      self.manager_window_instance.run()
+
+       
 
     def room_selection(self, selected_room_type):
         room_info = selected_room_type.split("-")
@@ -261,9 +272,9 @@ class ReserveRoomWindow:
                 
     
              
-def main():
+"""def main():
     username =  "Asma" # Replace with the actual username after login
-    ReserveWindow=ReserveRoomWindow(username)
+    ReserveWindow=ReserveRoomWindow(_,username)
     myReservations=ReserveWindow.GetReservationsByUser("Asma")
     print (len(myReservations))
     for reservation in myReservations:
@@ -274,7 +285,7 @@ def main():
         
     
 
-main()
+main()"""
     
     
 

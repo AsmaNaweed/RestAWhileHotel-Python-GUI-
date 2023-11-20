@@ -60,7 +60,7 @@ class LoginManager:
         self.passwordStored = password
 
     def Display_Reserve_Room_Window(self, username):
-          self.ReservationWindow=ReserveRoomWindow(username)
+          self.ReservationWindow=ReserveRoomWindow(self.main_win,username)
                        
     def run(self):
         # Start the Tkinter main loop
